@@ -15,14 +15,51 @@
  */
 package zookeeperjunit;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Properties;
+
+import javascalautils.Unit;
+import javascalautils.concurrent.Future;
+import static javascalautils.concurrent.FutureCompanion.Future;
 /**
  * @author Peter Nerg
  */
-class ZKInstanceImpl implements ZKInstance {
+final class ZKInstanceImpl implements ZKInstance {
 	
-	private int port;
+	private final int port;
 
 	ZKInstanceImpl(int port) {
 		this.port = port;
+	}
+	
+	/* (non-Javadoc)
+	 * @see zookeeperjunit.ZKInstance#start()
+	 */
+	@Override
+	public Future<Unit> start() {
+//        File tmpDir = new File(System.getProperty("zookeepermanager.io.tmpdir", "target"));
+//        // create a unique path using the current time and append the port number for identification
+//        rootZooDir = mkdir(tmpDir, "zookeeper-" + port + "-" + System.currentTimeMillis() + "/");
+//        File dataDir = mkdir(rootZooDir, "dataDir/");
+//        File dataLogDir = mkdir(rootZooDir, "dataLogDir/");
+//
+//        // create the zookeeper.cfg with the necessary parameters
+//        File configFile = new File(rootZooDir, "zookeeper.cfg");
+//        Properties properties = new Properties();
+//        properties.put("tickTime", "2000");
+//        properties.put("dataDir", dataDir.getAbsolutePath());
+//        properties.put("dataLogDir", dataLogDir.getAbsolutePath());
+//        properties.put("clientPort", String.valueOf(port));
+//
+//        try (OutputStream ostream = new FileOutputStream(configFile)) {
+//            properties.store(ostream, "");
+//        }
+//        start(configFile);
+		return Future(() -> {
+			
+			return Unit.Instance;
+		});
 	}
 }

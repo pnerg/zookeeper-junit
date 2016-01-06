@@ -15,10 +15,21 @@
  */
 package zookeeperjunit;
 
+import javascalautils.Unit;
+import javascalautils.concurrent.Future;
+
 /**
  * @author Peter Nerg
- *
+ * @since 1.0
  */
 public interface ZKInstance {
 
+	/**
+	 * Starts the instance. <br>
+	 * This is a non-blocking operation and returns a Future that will be completed once the instance is started.
+	 * @return The future that will be completed once the instance is started.
+	 * @since 1.0
+	 */
+	Future<Unit> start();
+	
 }
