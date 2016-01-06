@@ -15,6 +15,11 @@
  */
 package zookeeperjunit;
 
+import java.io.File;
+
+import javascalautils.Option;
+import static javascalautils.OptionCompanion.None;
+import static javascalautils.OptionCompanion.Option;
 /**
  * Factory for creating ZooKeeper instances.
  * 
@@ -23,7 +28,8 @@ package zookeeperjunit;
  */
 public class ZKFactory {
 	private int port = 0;
-
+	private File rootDir = new File("target");
+	
 	/**
 	 * Inhibitive constructor.
 	 */
@@ -45,6 +51,7 @@ public class ZKFactory {
 	 * This is optional, if not provided <tt>0</tt> is used and the O/S decided for a free port. <br>
 	 * Unless special needs for ports are required it's recommended to not set any specific port and let the O/S decide.
 	 * @return The factory instance
+	 * @since 1.0
 	 */
 	public ZKFactory withPort(int port) {
 		this.port = port;
@@ -57,6 +64,6 @@ public class ZKFactory {
 	 * @since 1.0
 	 */
 	public ZKInstance create() {
-		return new ZKInstanceImpl(port);
+		return new ZKInstanceImpl(port, rootDir);
 	}
 }
