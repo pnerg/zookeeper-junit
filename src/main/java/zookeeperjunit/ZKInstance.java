@@ -31,5 +31,13 @@ public interface ZKInstance {
 	 * @since 1.0
 	 */
 	Future<Unit> start();
+
+	/**
+	 * Stops this instance.
+	 * This is a non-blocking operation and returns a Future that will be completed once the instance is stopped.
+	 * @return The future that will be completed once the instance is stopped.
+	 * @since 1.0
+	 */
+	Future<Unit> stop();
 	
 }

@@ -19,6 +19,7 @@ import java.io.File;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.After;
 import org.junit.Test;
 
 import javascalautils.Unit;
@@ -29,11 +30,17 @@ import javascalautils.concurrent.Future;
  *
  */
 public class TestZKInstanceImpl extends BaseAssert {
+	private static final Duration duration = Duration.ofSeconds(5);
 	private final ZKInstanceImpl instance = new ZKInstanceImpl(0, new File("target/"));
+	
+	@After
+	public void after() throws TimeoutException, Throwable {
+		instance.stop().result(duration);
+	}
 	
 	@Test(timeout=5000)
 	public void start() throws TimeoutException, Throwable {
 		Future<Unit> start = instance.start();
-		start.result(Duration.ofSeconds(2));
+		start.result(duration);
 	}
 }

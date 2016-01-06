@@ -16,6 +16,7 @@
 package zookeeperjunit;
 
 import static javascalautils.OptionCompanion.None;
+import static javascalautils.TryCompanion.Try;
 import static javascalautils.OptionCompanion.Some;
 import static javascalautils.concurrent.FutureCompanion.Future;
 
@@ -30,6 +31,7 @@ import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 import javascalautils.Option;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
+
 /**
  * @author Peter Nerg
  */
@@ -46,10 +48,9 @@ final class ZKInstanceImpl implements ZKInstance {
 	/** This is the root dir where all ZK data is stored for this ZK instance. */
 	private File rootZooDir;
 
-	
 	private Option<FileTxnSnapLog> fileTxnSnapLog = None();
-	private Option<ServerCnxnFactory>  serverCnxnFactory = None();
-	
+	private Option<ServerCnxnFactory> serverCnxnFactory = None();
+
 	ZKInstanceImpl(int cfgPort, File rootDir) {
 		this.cfgPort = cfgPort;
 		this.rootDir = rootDir;
@@ -65,23 +66,39 @@ final class ZKInstanceImpl implements ZKInstance {
 		return Future(() -> {
 			zookeeperPort = FreePortUtil.getFreePort(cfgPort);
 			// create a unique path using the port number for identification
-			rootZooDir = new File(rootDir, "zk-"+zookeeperPort+File.separator);
-			FileUtil.delete(rootDir); //clear out any old data 
-			
-            ZooKeeperServer zkServer = new ZooKeeperServer();
-            FileTxnSnapLog log = new FileTxnSnapLog(new File(rootZooDir, "dataDir"), new File(rootZooDir, "dataLogDir"));
-            zkServer.setTxnLogFactory(log);
-            zkServer.setTickTime(200);
-            zkServer.setMinSessionTimeout(10000);
-            zkServer.setMaxSessionTimeout(10000);
-            ServerCnxnFactory cnxnFactory = ServerCnxnFactory.createFactory();
-            cnxnFactory.configure(new InetSocketAddress(zookeeperPort), 50);
-            cnxnFactory.startup(zkServer);
-            fileTxnSnapLog = Some(log);
-            serverCnxnFactory = Some(cnxnFactory);
-			
+			rootZooDir = new File(rootDir, "zk-" + zookeeperPort + File.separator);
+			FileUtil.delete(rootDir); // clear out any old data
+
+			ZooKeeperServer zkServer = new ZooKeeperServer();
+			FileTxnSnapLog log = new FileTxnSnapLog(new File(rootZooDir, "dataDir"), new File(rootZooDir, "dataLogDir"));
+			zkServer.setTxnLogFactory(log);
+			zkServer.setTickTime(2000);
+			zkServer.setMinSessionTimeout(10000);
+			zkServer.setMaxSessionTimeout(10000);
+			ServerCnxnFactory cnxnFactory = ServerCnxnFactory.createFactory();
+			cnxnFactory.configure(new InetSocketAddress(zookeeperPort), 50);
+			cnxnFactory.startup(zkServer);
+			fileTxnSnapLog = Some(log);
+			serverCnxnFactory = Some(cnxnFactory);
+
 			return Unit.Instance;
 		});
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see zookeeperjunit.ZKInstance#stop()
+	 */
+	@Override
+	public Future<Unit> stop() {
+		return Future(() -> {
+			serverCnxnFactory.forEach(s -> s.shutdown());
+			fileTxnSnapLog.forEach(f -> Try(() -> {
+				f.close();
+				return Unit.Instance;
+			}));
+			return Unit.Instance;
+		});
+	}
 }
