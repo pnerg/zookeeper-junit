@@ -29,7 +29,7 @@ class FreePortUtil {
 	/**
 	 * Attempts to check the port if it's free. <br>
 	 * This is done by starting a {@link ServerSocket} on the provided <tt>port</tt>. <br>
-	 * If port <tt>0</tt> is provided it's up tothe O/S decide on which port to use. <br>
+	 * If port <tt>0</tt> is provided it's up to the O/S to decide which port to use. <br>
 	 * We then return the local port from the server socket and then close the server socket without using it.
 	 * 
 	 * @return The found free port number
