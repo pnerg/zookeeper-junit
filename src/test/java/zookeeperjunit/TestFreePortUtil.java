@@ -26,8 +26,12 @@ import org.junit.Test;
 public class TestFreePortUtil extends BaseAssert {
 
 	@Test
-	public void getFreePort() throws IOException {
-		assertTrue(FreePortUtil.getFreePort() > 0);
+	public void getFreePort_withZero() throws IOException {
+		assertTrue(FreePortUtil.getFreePort(0) > 0);
 	}
 	
+	@Test
+	public void getFreePort_withNonZero() throws IOException {
+		assertEquals(6969, FreePortUtil.getFreePort(6969));
+	}
 }

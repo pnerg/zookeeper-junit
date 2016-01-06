@@ -27,16 +27,17 @@ import java.net.ServerSocket;
 class FreePortUtil {
 
 	/**
-	 * Attempts to find a free port to use. <br>
-	 * This is done by starting a {@link ServerSocket} on port <tt>0</tt> thus letting the O/S decide on which port to use. <br>
+	 * Attempts to check the port if it's free. <br>
+	 * This is done by starting a {@link ServerSocket} on the provided <tt>port</tt>. <br>
+	 * If port <tt>0</tt> is provided it's up tothe O/S decide on which port to use. <br>
 	 * We then return the local port from the server socket and then close the server socket without using it.
 	 * 
 	 * @return The found free port number
 	 * @throws IOException
 	 * @since 1.0
 	 */
-	static int getFreePort() throws IOException {
-		try (ServerSocket server = new ServerSocket(0)) {
+	static int getFreePort(int port) throws IOException {
+		try (ServerSocket server = new ServerSocket(port)) {
 			return server.getLocalPort();
 		}
 	}
