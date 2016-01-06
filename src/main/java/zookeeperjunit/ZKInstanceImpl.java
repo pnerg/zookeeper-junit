@@ -15,14 +15,21 @@
  */
 package zookeeperjunit;
 
+import static javascalautils.OptionCompanion.None;
+import static javascalautils.OptionCompanion.Some;
 import static javascalautils.concurrent.FutureCompanion.Future;
 
 import java.io.File;
+import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.zookeeper.server.ServerCnxnFactory;
+import org.apache.zookeeper.server.ZooKeeperServer;
+import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
+
+import javascalautils.Option;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
-
 /**
  * @author Peter Nerg
  */
@@ -39,6 +46,10 @@ final class ZKInstanceImpl implements ZKInstance {
 	/** This is the root dir where all ZK data is stored for this ZK instance. */
 	private File rootZooDir;
 
+	
+	private Option<FileTxnSnapLog> fileTxnSnapLog = None();
+	private Option<ServerCnxnFactory>  serverCnxnFactory = None();
+	
 	ZKInstanceImpl(int cfgPort, File rootDir) {
 		this.cfgPort = cfgPort;
 		this.rootDir = rootDir;
@@ -51,49 +62,26 @@ final class ZKInstanceImpl implements ZKInstance {
 	 */
 	@Override
 	public Future<Unit> start() {
-
-		// File tmpDir = new File(System.getProperty("zookeepermanager.io.tmpdir", "target"));
-		// // create a unique path using the current time and append the port number for identification
-		// rootZooDir = mkdir(tmpDir, "zookeeper-" + port + "-" + System.currentTimeMillis() + "/");
-		// File dataDir = mkdir(rootZooDir, "dataDir/");
-		// File dataLogDir = mkdir(rootZooDir, "dataLogDir/");
-		//
-		// // create the zookeeper.cfg with the necessary parameters
-		// File configFile = new File(rootZooDir, "zookeeper.cfg");
-		// Properties properties = new Properties();
-		// properties.put("tickTime", "2000");
-		// properties.put("dataDir", dataDir.getAbsolutePath());
-		// properties.put("dataLogDir", dataLogDir.getAbsolutePath());
-		// properties.put("clientPort", String.valueOf(port));
-		//
-		// try (OutputStream ostream = new FileOutputStream(configFile)) {
-		// properties.store(ostream, "");
-		// }
-		// start(configFile);
 		return Future(() -> {
 			zookeeperPort = FreePortUtil.getFreePort(cfgPort);
-
 			// create a unique path using the port number for identification
-			rootZooDir = FileUtil.createZooKeeperConfig(rootDir, zookeeperPort);
+			rootZooDir = new File(rootDir, "zk-"+zookeeperPort+File.separator);
+			FileUtil.delete(rootDir); //clear out any old data 
+			
+            ZooKeeperServer zkServer = new ZooKeeperServer();
+            FileTxnSnapLog log = new FileTxnSnapLog(new File(rootZooDir, "dataDir"), new File(rootZooDir, "dataLogDir"));
+            zkServer.setTxnLogFactory(log);
+            zkServer.setTickTime(200);
+            zkServer.setMinSessionTimeout(10000);
+            zkServer.setMaxSessionTimeout(10000);
+            ServerCnxnFactory cnxnFactory = ServerCnxnFactory.createFactory();
+            cnxnFactory.configure(new InetSocketAddress(zookeeperPort), 50);
+            cnxnFactory.startup(zkServer);
+            fileTxnSnapLog = Some(log);
+            serverCnxnFactory = Some(cnxnFactory);
 			
 			return Unit.Instance;
 		});
-				
-//	    /**
-//	     * Starts the instance with the provided configuration file
-//	     * 
-//	     * @param cfgFile
-//	     * @throws IOException
-//	     * @throws InterruptedException
-//	     */
-//	    private void start(File cfgFile) throws IOException, InterruptedException {
-//	        // starts ZK using a separate thread as it the call to start ZK locks the running thread
-//	        starter = new ZooKeeperStarter(cfgFile.getAbsolutePath());
-//	        new Thread(starter, "ZooKeeper-Starter").start();
-//
-//
-//	        started = true;
-//	    }		
 	}
 
 }

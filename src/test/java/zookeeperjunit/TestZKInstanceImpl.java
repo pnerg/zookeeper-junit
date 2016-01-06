@@ -15,25 +15,25 @@
  */
 package zookeeperjunit;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.io.File;
+import java.time.Duration;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.Test;
 
-/**
- * Test the class FreePortUtil.
- * @author Peter Nerg
- */
-public class TestFreePortUtil extends BaseAssert {
+import javascalautils.Unit;
+import javascalautils.concurrent.Future;
 
-	@Test
-	public void getFreePort_withZero() throws IOException {
-		assertTrue(FreePortUtil.getFreePort(0) > 0);
-	}
+/**
+ * @author Peter Nerg
+ *
+ */
+public class TestZKInstanceImpl extends BaseAssert {
+	private final ZKInstanceImpl instance = new ZKInstanceImpl(0, new File("target/"));
 	
-	@Test
-	public void getFreePort_withNonZero() throws IOException {
-		assertEquals(6969, FreePortUtil.getFreePort(6969));
+	@Test(timeout=5000)
+	public void start() throws TimeoutException, Throwable {
+		Future<Unit> start = instance.start();
+		start.result(Duration.ofSeconds(2));
 	}
-	
 }
