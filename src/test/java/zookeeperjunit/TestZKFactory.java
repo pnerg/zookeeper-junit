@@ -31,6 +31,7 @@ public class TestZKFactory extends BaseAssert {
 		assertNotNull(instance);
 	}
 	
+	@Test
 	public void withPort() {
 		ZKInstance instance = factory.withPort(6969).create();
 		assertNotNull(instance);

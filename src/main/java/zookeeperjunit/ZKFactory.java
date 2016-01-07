@@ -16,10 +16,6 @@
 package zookeeperjunit;
 
 import java.io.File;
-
-import javascalautils.Option;
-import static javascalautils.OptionCompanion.None;
-import static javascalautils.OptionCompanion.Option;
 /**
  * Factory for creating ZooKeeper instances.
  * 
