@@ -94,6 +94,8 @@ final class ZKInstanceImpl implements ZKInstance {
 				f.close();
 				return Unit.Instance;
 			}));
+			fileTxnSnapLog = None();
+			serverCnxnFactory = None();
 			return Unit.Instance;
 		});
 	}
