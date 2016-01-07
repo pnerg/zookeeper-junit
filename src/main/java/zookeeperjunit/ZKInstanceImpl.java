@@ -63,7 +63,7 @@ final class ZKInstanceImpl implements ZKInstance {
 		return Future(() -> {
 			// create a unique path using the port number for identification
 			rootZooDir = new File(rootDir, "zk-" + System.currentTimeMillis() + File.separator);
-			FileUtil.delete(rootDir); // clear out any old data
+			FileUtil.delete(rootZooDir); // clear out any old data
 
 			ZooKeeperServer zkServer = new ZooKeeperServer();
 			FileTxnSnapLog log = new FileTxnSnapLog(new File(rootZooDir, "dataDir"), new File(rootZooDir, "dataLogDir"));
