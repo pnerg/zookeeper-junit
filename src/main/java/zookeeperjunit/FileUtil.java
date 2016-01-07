@@ -15,14 +15,9 @@
  */
 package zookeeperjunit;
 
-import static zookeeperjunit.FileUtil.mkdir;
-
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.Properties;
 
 /**
  * Utilities for file management.
@@ -30,6 +25,13 @@ import java.util.Properties;
  * @since 1.0
  */
 final class FileUtil {
+
+	/**
+	 * Inhibitive constructor.
+	 */
+	private FileUtil() {
+	}
+	
     /**
      * Creates the requested directory. <br>
      * If it already exists it will be deleted and then re-created.
