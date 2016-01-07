@@ -47,5 +47,12 @@ public interface ZKInstance {
 	 * @since 1.0
 	 */
 	Option<String> connectString();
+
+	/**
+	 * Get the port to the started instance. 
+	 * @return Some containing the port if started, None if not started
+	 * @since 1.0
+	 */
+	Option<Integer> port();
 	
 }

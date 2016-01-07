@@ -105,4 +105,12 @@ final class ZKInstanceImpl implements ZKInstance {
 	public Option<String> connectString() {		
 		return serverCnxnFactory.map(sf -> "127.0.0.1:"+sf.getLocalPort());
 	}
+	
+	/* (non-Javadoc)
+	 * @see zookeeperjunit.ZKInstance#port()
+	 */
+	@Override
+	public Option<Integer> port() {
+		return serverCnxnFactory.map(sf -> sf.getLocalPort());
+	}
 }

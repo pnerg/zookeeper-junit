@@ -51,4 +51,11 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 		start();
 		assertIsSome(instance.connectString());
 	}
+
+	@Test(timeout=Timeout)
+	public void port() throws TimeoutException, Throwable {
+		start();
+		assertIsSome(instance.port());
+	}
+
 }
