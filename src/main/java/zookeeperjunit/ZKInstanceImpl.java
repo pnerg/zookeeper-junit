@@ -42,9 +42,6 @@ final class ZKInstanceImpl implements ZKInstance {
 
 	private final AtomicBoolean started = new AtomicBoolean(false);
 
-	/** This is the actual port ZK listens to. */
-	private int zookeeperPort = -1;
-
 	/** This is the root dir where all ZK data is stored for this ZK instance. */
 	private File rootZooDir;
 
@@ -64,9 +61,8 @@ final class ZKInstanceImpl implements ZKInstance {
 	@Override
 	public Future<Unit> start() {
 		return Future(() -> {
-			zookeeperPort = FreePortUtil.getFreePort(cfgPort);
 			// create a unique path using the port number for identification
-			rootZooDir = new File(rootDir, "zk-" + zookeeperPort + File.separator);
+			rootZooDir = new File(rootDir, "zk-" + System.currentTimeMillis() + File.separator);
 			FileUtil.delete(rootDir); // clear out any old data
 
 			ZooKeeperServer zkServer = new ZooKeeperServer();
@@ -76,7 +72,7 @@ final class ZKInstanceImpl implements ZKInstance {
 			zkServer.setMinSessionTimeout(10000);
 			zkServer.setMaxSessionTimeout(10000);
 			ServerCnxnFactory cnxnFactory = ServerCnxnFactory.createFactory();
-			cnxnFactory.configure(new InetSocketAddress(zookeeperPort), 50);
+			cnxnFactory.configure(new InetSocketAddress(cfgPort), 50);
 			cnxnFactory.startup(zkServer);
 			fileTxnSnapLog = Some(log);
 			serverCnxnFactory = Some(cnxnFactory);
@@ -100,5 +96,13 @@ final class ZKInstanceImpl implements ZKInstance {
 			}));
 			return Unit.Instance;
 		});
+	}
+	
+	/* (non-Javadoc)
+	 * @see zookeeperjunit.ZKInstance#connectString()
+	 */
+	@Override
+	public Option<String> connectString() {		
+		return serverCnxnFactory.map(sf -> "127.0.0.1:"+sf.getLocalPort());
 	}
 }

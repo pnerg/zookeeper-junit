@@ -15,6 +15,7 @@
  */
 package zookeeperjunit;
 
+import javascalautils.Option;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
 
@@ -39,5 +40,12 @@ public interface ZKInstance {
 	 * @since 1.0
 	 */
 	Future<Unit> stop();
+	
+	/**
+	 * Get the connect string [host:port] to the started instance. 
+	 * @return Some containing the string if started, None if not started
+	 * @since 1.0
+	 */
+	Option<String> connectString();
 	
 }

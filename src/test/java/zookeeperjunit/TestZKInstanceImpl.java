@@ -24,13 +24,15 @@ import org.junit.Test;
 
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
+import junitextensions.OptionAssert;
 
 /**
+ * Test the class {@link ZKInstanceImpl}
  * @author Peter Nerg
- *
  */
-public class TestZKInstanceImpl extends BaseAssert {
-	private static final Duration duration = Duration.ofSeconds(5);
+public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
+	private static final long Timeout = 5000;
+	private static final Duration duration = Duration.ofMillis(Timeout);
 	private final ZKInstanceImpl instance = new ZKInstanceImpl(0, new File("target/"));
 	
 	@After
@@ -38,9 +40,15 @@ public class TestZKInstanceImpl extends BaseAssert {
 		instance.stop().result(duration);
 	}
 	
-	@Test(timeout=5000)
+	@Test(timeout=Timeout)
 	public void start() throws TimeoutException, Throwable {
 		Future<Unit> start = instance.start();
 		start.result(duration);
+	}
+	
+	@Test(timeout=Timeout)
+	public void connectString() throws TimeoutException, Throwable {
+		start();
+		assertIsSome(instance.connectString());
 	}
 }
