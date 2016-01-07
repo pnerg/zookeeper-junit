@@ -16,13 +16,12 @@
 package zookeeperjunit;
 
 import static javascalautils.OptionCompanion.None;
-import static javascalautils.TryCompanion.Try;
 import static javascalautils.OptionCompanion.Some;
+import static javascalautils.TryCompanion.Try;
 import static javascalautils.concurrent.FutureCompanion.Future;
 
 import java.io.File;
 import java.net.InetSocketAddress;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
@@ -37,20 +36,20 @@ import javascalautils.concurrent.Future;
  */
 final class ZKInstanceImpl implements ZKInstance {
 
-	private final int cfgPort;
-	private final File rootDir;
-
-	private final AtomicBoolean started = new AtomicBoolean(false);
-
 	/** This is the root dir where all ZK data is stored for this ZK instance. */
-	private File rootZooDir;
+	private final File rootZooDir;
+
+	
+	/** The port ZK will listen to.*/
+	private int cfgPort;
 
 	private Option<FileTxnSnapLog> fileTxnSnapLog = None();
 	private Option<ServerCnxnFactory> serverCnxnFactory = None();
 
 	ZKInstanceImpl(int cfgPort, File rootDir) {
 		this.cfgPort = cfgPort;
-		this.rootDir = rootDir;
+		// create a unique path time for identification
+		rootZooDir = new File(rootDir, "zk-" + System.currentTimeMillis() + File.separator);
 	}
 
 	/*
@@ -61,10 +60,6 @@ final class ZKInstanceImpl implements ZKInstance {
 	@Override
 	public Future<Unit> start() {
 		return Future(() -> {
-			// create a unique path using the port number for identification
-			rootZooDir = new File(rootDir, "zk-" + System.currentTimeMillis() + File.separator);
-			FileUtil.delete(rootZooDir); // clear out any old data
-
 			ZooKeeperServer zkServer = new ZooKeeperServer();
 			FileTxnSnapLog log = new FileTxnSnapLog(new File(rootZooDir, "dataDir"), new File(rootZooDir, "dataLogDir"));
 			zkServer.setTxnLogFactory(log);
@@ -76,7 +71,10 @@ final class ZKInstanceImpl implements ZKInstance {
 			cnxnFactory.startup(zkServer);
 			fileTxnSnapLog = Some(log);
 			serverCnxnFactory = Some(cnxnFactory);
-
+			//remember the port. if 0 was provided then ZK will pick a free port
+			//it must be remembered for the scenario of restarting this instance
+			//in such case we want to get the same port again
+			cfgPort = cnxnFactory.getLocalPort();
 			return Unit.Instance;
 		});
 	}
@@ -94,7 +92,6 @@ final class ZKInstanceImpl implements ZKInstance {
 				f.close();
 				return Unit.Instance;
 			}));
-			FileUtil.delete(rootZooDir); // clear out any old data
 			fileTxnSnapLog = None();
 			serverCnxnFactory = None();
 			return Unit.Instance;
