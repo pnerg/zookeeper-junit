@@ -94,9 +94,22 @@ final class ZKInstanceImpl implements ZKInstance {
 				f.close();
 				return Unit.Instance;
 			}));
+			FileUtil.delete(rootZooDir); // clear out any old data
 			fileTxnSnapLog = None();
 			serverCnxnFactory = None();
 			return Unit.Instance;
+		});
+	}
+	
+	/* (non-Javadoc)
+	 * @see zookeeperjunit.ZKInstance#destroy()
+	 */
+	@Override
+	public Future<Unit> destroy() {
+		// clear out any old data
+		return stop().map(u -> {
+			FileUtil.delete(rootZooDir);
+			return u;
 		});
 	}
 	
@@ -115,4 +128,5 @@ final class ZKInstanceImpl implements ZKInstance {
 	public Option<Integer> port() {
 		return serverCnxnFactory.map(sf -> sf.getLocalPort());
 	}
+	
 }

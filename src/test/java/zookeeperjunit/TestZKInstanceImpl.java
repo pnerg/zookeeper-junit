@@ -37,7 +37,7 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 	
 	@After
 	public void after() throws TimeoutException, Throwable {
-		instance.stop().result(duration);
+		instance.destroy().result(duration);
 	}
 	
 	@Test(timeout=Timeout)
