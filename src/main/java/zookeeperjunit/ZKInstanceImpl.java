@@ -103,7 +103,7 @@ final class ZKInstanceImpl implements ZKInstance {
 	 */
 	@Override
 	public Option<String> connectString() {		
-		return serverCnxnFactory.map(sf -> "127.0.0.1:"+sf.getLocalPort());
+		return port().map(port -> "127.0.0.1:"+port);
 	}
 	
 	/* (non-Javadoc)
