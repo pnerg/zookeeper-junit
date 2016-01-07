@@ -75,37 +75,4 @@ final class FileUtil {
          return path.exists() ? path.delete() : true;
      }
      
-     /**
-      * Creates the file structure for the ZooKeeper instance. <br>
-      * Will also create the <tt>zookeeper.cfg</tt> file with the appropriate data.
-      * <pre>
-      * /rootDir
-      *   /zookeeper-[port]
-      *     /dataDir
-      *     /dataLogDir
-      *     zookeeper.cfg
-      * </pre>
-      * @param rootDir
-      * @param port
-      * @return The path to the dir zookeeper-[port]
-      * @throws IOException
-      */
-     static File createZooKeeperConfig(File rootDir, int port) throws IOException {
-			// create a unique path using the port number for identification
-			File rootZooDir = mkdir(rootDir, "zookeeper-" + port + "/");
-			File dataDir = mkdir(rootZooDir, "dataDir/");
-			File dataLogDir = mkdir(rootZooDir, "dataLogDir/");
-
-			// create the zookeeper.cfg with the necessary parameters
-			File configFile = new File(rootZooDir, "zookeeper.cfg");
-			Properties properties = new Properties();
-			properties.put("tickTime", "2000");
-			properties.put("dataDir", dataDir.getAbsolutePath());
-			properties.put("dataLogDir", dataLogDir.getAbsolutePath());
-			properties.put("clientPort", String.valueOf(port));
-			try (OutputStream ostream = new FileOutputStream(configFile)) {
-				properties.store(ostream, "");
-			}
-			return rootZooDir;
-     }
 }

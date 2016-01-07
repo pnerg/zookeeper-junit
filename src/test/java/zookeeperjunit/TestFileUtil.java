@@ -52,11 +52,4 @@ public class TestFileUtil extends BaseAssert {
 		FileUtil.mkdir(new File("/illegal-path"), "mkdir");
 	}
 	
-	@Test
-	public void createZooKeeperConfig() throws IOException {
-		File cfgDir = FileUtil.createZooKeeperConfig(rootDir, 666);
-		assertTrue(cfgDir.isDirectory());
-		assertTrue(new File(cfgDir, "zookeeper.cfg").isFile());
-	}
-
 }
