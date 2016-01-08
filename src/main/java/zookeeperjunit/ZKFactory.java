@@ -46,6 +46,7 @@ public class ZKFactory {
 	 * Sets the port to use for the ZooKeeper instance. <br>
 	 * This is optional, if not provided <tt>0</tt> is used and the O/S decided for a free port. <br>
 	 * Unless special needs for ports are required it's recommended to not set any specific port and let the O/S decide.
+	 * @param port The port ZooKeeper shall listen to
 	 * @return The factory instance
 	 * @since 1.0
 	 */
