@@ -46,7 +46,7 @@ public interface ZKInstance {
 	 * Stops and destroys this instance.
 	 * This is a non-blocking operation and returns a Future that will be completed once the instance is stopped. <br>
 	 * Data on disc is destroyed meaning that invoking {@link #start() start} again will yield an empty database.
-	 * @return The future that will be completed once the instance is stopped.
+	 * @return The future that will be completed once the instance is destroyed.
 	 * @since 1.0
 	 */
 	Future<Unit> destroy();
