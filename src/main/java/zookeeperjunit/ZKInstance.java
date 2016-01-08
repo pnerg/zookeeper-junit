@@ -29,7 +29,7 @@ public interface ZKInstance {
 
 	/**
 	 * Starts the instance. <br>
-	 * This is a non-blocking operation and returns a Future that will be completed once the instance is started.
+	 * This is a non-blocking operation and returns a {@link Future} that will be completed once the instance is started.
 	 * @return The future that will be completed once the instance is started.
 	 * @since 1.0
 	 */
@@ -37,7 +37,7 @@ public interface ZKInstance {
 
 	/**
 	 * Stops this instance.
-	 * This is a non-blocking operation and returns a Future that will be completed once the instance is stopped. <br>
+	 * This is a non-blocking operation and returns a {@link Future} that will be completed once the instance is stopped. <br>
 	 * Data on disc is not destroyed meaning that the instances can be {@link #start() started} again.
 	 * @return The future that will be completed once the instance is stopped.
 	 * @since 1.0
@@ -46,7 +46,7 @@ public interface ZKInstance {
 
 	/**
 	 * Stops and destroys this instance.
-	 * This is a non-blocking operation and returns a Future that will be completed once the instance is stopped. <br>
+	 * This is a non-blocking operation and returns a {@link Future} that will be completed once the instance is stopped. <br>
 	 * Data on disc is destroyed meaning that invoking {@link #start() start} again will yield an empty database.
 	 * @return The future that will be completed once the instance is destroyed.
 	 * @since 1.0
@@ -55,14 +55,14 @@ public interface ZKInstance {
 	
 	/**
 	 * Get the connect string [host:port] to the started instance. 
-	 * @return Some containing the string if started, None if not started
+	 * @return {@link javascalautils.Some} containing the port if started, {@link javascalautils.None} if not started
 	 * @since 1.0
 	 */
 	Option<String> connectString();
 
 	/**
 	 * Get the port to the started instance. 
-	 * @return Some containing the port if started, None if not started
+	 * @return {@link javascalautils.Some} containing the port if started, {@link javascalautils.None} if not started
 	 * @since 1.0
 	 */
 	Option<Integer> port();
