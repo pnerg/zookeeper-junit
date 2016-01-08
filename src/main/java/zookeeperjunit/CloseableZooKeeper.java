@@ -21,21 +21,26 @@ import java.io.IOException;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 
+import javascalautils.Unit;
+
+import static javascalautils.TryCompanion.Try;
+
 /**
  * Extends the standard {@link ZooKeeper} connection class with the {@link Closeable} interface. <br>
  * This is to be able to use it in try-with-resources clauses.
+ * 
  * @author Peter Nerg
  */
 final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	CloseableZooKeeper(String connectString, int sessionTimeout, Watcher watcher) throws IOException {
 		super(connectString, sessionTimeout, watcher);
 	}
-	
+
 	@Override
 	public void close() {
-		try {
+		Try(() -> {
 			super.close();
-		} catch (InterruptedException e) {
-		}
+			return Unit.Instance;
+		});
 	}
 }
