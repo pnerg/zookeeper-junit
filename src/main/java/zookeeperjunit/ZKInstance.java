@@ -20,6 +20,8 @@ import javascalautils.Unit;
 import javascalautils.concurrent.Future;
 
 /**
+ * Represents a ZooKeeper instance. <br>
+ * The life-cycle of the instance is controlled form here.
  * @author Peter Nerg
  * @since 1.0
  */
