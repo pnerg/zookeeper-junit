@@ -15,23 +15,15 @@
  */
 package zookeeperjunit;
 
-import static javascalautils.concurrent.FutureCompanion.Future;
 import static org.apache.zookeeper.CreateMode.PERSISTENT;
 import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
 
-import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.ACL;
-
-import javascalautils.concurrent.Future;
 
 /**
  * Utility methods to poke around with ZooKeeper.
@@ -39,23 +31,6 @@ import javascalautils.concurrent.Future;
  */
 abstract class ZKConnectionUtil {
 
-	static Future<CloseableZooKeeper> connect(String url) {
-		return Future(() -> {
-			CountDownLatch latch = new CountDownLatch(1);
-			CloseableZooKeeper zk = new CloseableZooKeeper(url, 10000, event -> {
-				if (event.getState() == KeeperState.SyncConnected) {
-					latch.countDown();
-				}
-			});
-			latch.await(5, TimeUnit.SECONDS);
-			return zk;
-		});
-	}
-
-	static CloseableZooKeeper blockingConnect(String url) throws TimeoutException, Throwable {
-		return connect(url).result(Duration.ofSeconds(5));
-	}
-	
 	static boolean createIfNotExist(ZooKeeper zooKeeper, String path, byte[] data) throws KeeperException, InterruptedException {
 		return createIfNotExist(zooKeeper, path, data, OPEN_ACL_UNSAFE, PERSISTENT);
 	}
@@ -64,7 +39,6 @@ abstract class ZKConnectionUtil {
 		boolean result = false;
 		try {
 			// check if the path exists before trying to create
-			// attempting to create existing paths generate unnecessary logs in ZK (artf247514)
 			if (!exists(zooKeeper, path)) {
 				zooKeeper.create(path, data, acl, createMode);
 				result = true;
@@ -78,7 +52,7 @@ abstract class ZKConnectionUtil {
 		return result;
 	}
 
-	boolean createRecursive(ZooKeeper zooKeeper, String path) throws KeeperException, InterruptedException {
+	static boolean createRecursive(ZooKeeper zooKeeper, String path) throws KeeperException, InterruptedException {
 		return createRecursive(zooKeeper, path, new byte[0], OPEN_ACL_UNSAFE, PERSISTENT);
 	}
 

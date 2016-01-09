@@ -15,7 +15,7 @@
  */
 package zookeeperjunit;
 
-import static zookeeperjunit.ZKConnectionUtil.blockingConnect;
+import static zookeeperjunit.CloseableZooKeeper.blockingConnect;
 
 import java.io.File;
 import java.time.Duration;
@@ -83,7 +83,7 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 		final String path = "/tmp/restart-" + System.currentTimeMillis();
 
 		// connect and create data in ZK
-		try (CloseableZooKeeper zookeeper = blockingConnect(instance.connectString().get())) {
+		try (CloseableZooKeeper zookeeper = blockingConnect(instance.connectString().get(),duration)) {
 			ZKConnectionUtil.createRecursive(zookeeper, path, data.getBytes());
 		}
 		
@@ -96,7 +96,7 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 
 		assertEquals(port, value(instance.port()));
 
-		try (CloseableZooKeeper zookeeper = blockingConnect(instance.connectString().get())) {
+		try (CloseableZooKeeper zookeeper = blockingConnect(instance.connectString().get(),duration)) {
 			assertEquals(data, new String(ZKConnectionUtil.getData(zookeeper, path)));
 		}
 	}

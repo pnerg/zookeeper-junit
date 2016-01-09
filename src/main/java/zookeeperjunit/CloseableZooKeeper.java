@@ -16,16 +16,22 @@
 package zookeeperjunit;
 
 import static javascalautils.TryCompanion.Try;
+import static javascalautils.concurrent.FutureCompanion.Future;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
 import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
 
 import javascalautils.Try;
 import javascalautils.Unit;
+import javascalautils.concurrent.Future;
 
 /**
  * Extends the standard {@link ZooKeeper} connection class with the {@link Closeable} interface. <br>
@@ -37,6 +43,36 @@ import javascalautils.Unit;
 final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	CloseableZooKeeper(String connectString, int sessionTimeout, Watcher watcher) throws IOException {
 		super(connectString, sessionTimeout, watcher);
+	}
+
+	/**
+	 * Creates a ZooKeeper connection.
+	 * @param connectString The connect string
+	 * @return A Future which will be completed once the connections is properly made and we're connected.
+	 */
+	static Future<CloseableZooKeeper> connect(String connectString) {
+		return Future(() -> {
+			CountDownLatch latch = new CountDownLatch(1);
+			CloseableZooKeeper zk = new CloseableZooKeeper(connectString, 10000, event -> {
+				if (event.getState() == KeeperState.SyncConnected) {
+					latch.countDown();
+				}
+			});
+			latch.await(); //this blocks indefinitely
+			return zk;
+		});
+	}
+	
+	/**
+	 * Creates a ZooKeeper connection.
+	 * @param connectString The connect string
+	 * @param duration The duration to wait for a connection to be established
+	 * @return The connection
+	 * @throws TimeoutException If exceed the provided duration
+	 * @throws Throwable Any other issue
+	 */
+	static CloseableZooKeeper blockingConnect(String connectString, Duration duration) throws TimeoutException, Throwable {
+		return connect(connectString).result(duration);
 	}
 
 	/**
