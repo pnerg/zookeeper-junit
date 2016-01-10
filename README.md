@@ -54,5 +54,15 @@ ZKInstance instance = ...
 Option<String> connectString = instance.connectString();
 ```
 The [Option](https://github.com/pnerg/java-scala-util/wiki/Option) interface represents an optional value which only is set if the server is started.
+
 ## References
 Refer to the project [java-scala-util](https://github.com/pnerg/java-scala-util) for details and examples on how to work with features such as [Option](https://github.com/pnerg/java-scala-util/wiki/Option)/[Try](https://github.com/pnerg/java-scala-util/wiki/Try)/[Future](https://github.com/pnerg/java-scala-util/wiki/Future)
+
+## Maven Central
+```xml
+<dependency>
+    <groupId>org.dmonix.junit</groupId>
+    <artifactId>zookeeper-junit</artifactId>
+    <version>1.0</version>
+</dependency>
+```
