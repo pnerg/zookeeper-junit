@@ -22,11 +22,13 @@ import java.nio.file.FileAlreadyExistsException;
 import org.junit.After;
 import org.junit.Test;
 
+import junitextensions.ReflectionAssert;
+
 /**
  * Test the class {@link FileUtil}
  * @author Peter Nerg
  */
-public class TestFileUtil extends BaseAssert {
+public class TestFileUtil extends BaseAssert implements ReflectionAssert {
 
 	private final File rootDir = new File("target/TestFileUtil-"+System.currentTimeMillis());
 	
@@ -52,4 +54,8 @@ public class TestFileUtil extends BaseAssert {
 		FileUtil.mkdir(new File("/illegal-path"), "mkdir");
 	}
 	
+	@Test
+	public void testPrivateConstructor() {
+		assertPrivateConstructor(FileUtil.class);
+	}
 }
