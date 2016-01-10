@@ -53,13 +53,13 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 	@Test(timeout = Timeout)
 	public void connectString() throws TimeoutException, Throwable {
 		start();
-		assertIsSome(instance.connectString());
+		assertSome(instance.connectString());
 	}
 
 	@Test(timeout = Timeout)
 	public void port() throws TimeoutException, Throwable {
 		start();
-		assertIsSome(instance.port());
+		assertSome(instance.port());
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 		
 		//stop the instance
 		instance.stop().result(duration);
-		assertIsNone(instance.port());
+		assertNone(instance.port());
 
 		//restart the instance again
 		start();
@@ -102,7 +102,7 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 	}
 
 	private <T> T value(Option<T> option) {
-		assertIsSome(option);
+		assertSome(option);
 		return option.get();
 	}
 
