@@ -75,7 +75,6 @@ final class ZKInstanceImpl implements ZKInstance {
 			//it must be remembered for the scenario of restarting this instance
 			//in such case we want to get the same port again
 			cfgPort = cnxnFactory.getLocalPort();
-			return Unit.Instance;
 		});
 	}
 
@@ -88,13 +87,9 @@ final class ZKInstanceImpl implements ZKInstance {
 	public Future<Unit> stop() {
 		return Future(() -> {
 			serverCnxnFactory.forEach(s -> s.shutdown());
-			fileTxnSnapLog.forEach(f -> Try(() -> {
-				f.close();
-				return Unit.Instance;
-			}));
+			fileTxnSnapLog.forEach(f -> Try(() -> f.close()));
 			fileTxnSnapLog = None();
 			serverCnxnFactory = None();
-			return Unit.Instance;
 		});
 	}
 	

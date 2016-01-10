@@ -102,10 +102,7 @@ final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	 * @return The result
 	 */
 	private Try<Unit> delete(String path) {
-		return Try(() -> {
-			delete(path, -1); // -1 for ANY version
-			return Unit.Instance;
-		});
+		return Try(() -> delete(path, -1) ); // -1 for ANY version
 	}
 
 	/**
@@ -125,9 +122,6 @@ final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	 */
 	@Override
 	public void close() {
-		Try(() -> {
-			super.close();
-			return Unit.Instance;
-		});
+		Try(() -> super.close());
 	}
 }
