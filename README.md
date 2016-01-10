@@ -8,7 +8,7 @@ I've at least found that all I've looked at have been cumbersome to work with or
 This project implements a simple to use and in-process ZooKeeper starter.   
 That is with a minimal amount of code you can control the life-cycle of a ZooKeeper server to use for your unit testing of applications needing a ZooKeper server.
 
-## The Factory
+## The factory
 The _ZKFactory_ is the starting point.  
 It's used to create instances of the ZooKeeper server.  
 The factory builds on the builder pattern principle, that is you provide only the set of parameters/configuration you deem neccesary.
