@@ -16,7 +16,7 @@
 	</issueManagement>
 
 	<properties>
-		<javascalautils.version>1.8</javascalautils.version>
+		<javascalautils.version>1.9</javascalautils.version>
 	</properties>
 	
 	<distributionManagement>
