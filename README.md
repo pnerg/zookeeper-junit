@@ -18,7 +18,7 @@ ZKInstance instance = ZKFactory.apply().withPort(6969).create();
 ```
 
 ## The instance
-The _ZKInstance_ acs as a representation of a ZooKeeper server and its life-cycle.  
+The _ZKInstance_ acts as a representation of a ZooKeeper server and its life-cycle.  
 It's used to start/stop/destroy and possible re-start a server.  
 
 ### Starting the server
