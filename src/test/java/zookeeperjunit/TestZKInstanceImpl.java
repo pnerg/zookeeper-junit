@@ -27,6 +27,7 @@ import org.junit.Test;
 import javascalautils.Option;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
+import junitextensions.FutureAssert;
 import junitextensions.OptionAssert;
 
 /**
@@ -34,7 +35,7 @@ import junitextensions.OptionAssert;
  * 
  * @author Peter Nerg
  */
-public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
+public class TestZKInstanceImpl extends BaseAssert implements OptionAssert, FutureAssert {
 	private static final long Timeout = 5000;
 	private static final Duration duration = Duration.ofMillis(Timeout);
 	private final ZKInstanceImpl instance = new ZKInstanceImpl(0, new File("target/"));
@@ -47,7 +48,7 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 	@Test(timeout = Timeout)
 	public void start() throws TimeoutException, Throwable {
 		Future<Unit> start = instance.start();
-		start.result(duration);
+		assertSuccess(start, duration);
 	}
 
 	@Test(timeout = Timeout)
@@ -106,8 +107,9 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert {
 		return option.get();
 	}
 
-	private <T> T value(Future<T> future) throws TimeoutException, Throwable {
-		return future.result(duration);
+	private <T> T value(Future<T> future) throws Throwable {
+		assertSuccess(future, duration);
+		return future.value().get().get();
 	}
 
 }
