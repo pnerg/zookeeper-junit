@@ -57,6 +57,23 @@ public class ZKFactory {
 	}
 	
 	/**
+	 * Sets the root directory for where the ZooKeeper data is to be stored. <br>
+	 * The data is persisted in order to be able to start/stop the ZooKeeper instance and still retain data. <br>
+	 * The argument must denote an existing directory. <br>
+	 * If not provided the default directory is <i>target</i> i.e. the build directory Maven uses.
+	 * @param dir The directory
+	 * @return The factory instance
+	 * @since 1.1
+	 */
+	public ZKFactory withRootDir(File dir) {
+		if(!dir.isDirectory()) {
+			throw new IllegalArgumentException("The path ["+dir.getAbsolutePath()+"] does not denote an existing directory");
+		}
+		this.rootDir = dir;
+		return this;
+	}
+	
+	/**
 	 * Creates the ZooKeeper instance.
 	 * @return The placeholder for the ZooKeeper instance.
 	 * @since 1.0

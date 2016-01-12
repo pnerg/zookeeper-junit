@@ -61,7 +61,7 @@ final class ZKInstanceImpl implements ZKInstance {
 	public Future<Unit> start() {
 		return Future(() -> {
 			ZooKeeperServer zkServer = new ZooKeeperServer();
-			FileTxnSnapLog log = new FileTxnSnapLog(new File(rootZooDir, "dataDir"), new File(rootZooDir, "dataLogDir"));
+			FileTxnSnapLog log = new FileTxnSnapLog(new File(rootZooDir, "dataDir"), new File(rootZooDir, "snapDir"));
 			zkServer.setTxnLogFactory(log);
 			zkServer.setTickTime(2000);
 			zkServer.setMinSessionTimeout(10000);

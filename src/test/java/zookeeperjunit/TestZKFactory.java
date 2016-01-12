@@ -15,6 +15,8 @@
  */
 package zookeeperjunit;
 
+import java.io.File;
+
 import org.junit.Test;
 
 /**
@@ -37,4 +39,14 @@ public class TestZKFactory extends BaseAssert {
 		assertNotNull(instance);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void withRootDir_illegalDir() {
+		factory.withRootDir(new File("no-such-dir"));
+	}
+	
+	@Test
+	public void withRootDir() {
+		ZKInstance instance = factory.withRootDir(new File("target")).create();
+		assertNotNull(instance);
+	}
 }
