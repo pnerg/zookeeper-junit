@@ -93,7 +93,7 @@ public final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	 */
 	public Try<Unit> deleteRecursively(String path) {
 		Try<Stream<String>> children = getChildren(path);
-		getChildren(path).forEach(stream -> {
+		children.forEach(stream -> {
 			stream.forEach(child -> {
 				String joinedZNode = path.equals("/") ? path + child : path + "/" + child;
 				deleteRecursively(joinedZNode);
