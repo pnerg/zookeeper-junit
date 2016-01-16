@@ -29,14 +29,12 @@ public class TestZKFactory extends BaseAssert {
 	
 	@Test
 	public void create() {
-		ZKInstance instance = factory.create();
-		assertNotNull(instance);
+		assertNotNull(factory.create());
 	}
 	
 	@Test
 	public void withPort() {
-		ZKInstance instance = factory.withPort(6969).create();
-		assertNotNull(instance);
+		assertNotNull(factory.withPort(6969).create());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -46,7 +44,6 @@ public class TestZKFactory extends BaseAssert {
 	
 	@Test
 	public void withRootDir() {
-		ZKInstance instance = factory.withRootDir(new File("target")).create();
-		assertNotNull(instance);
+		assertNotNull(factory.withRootDir(new File("target")).create());
 	}
 }
