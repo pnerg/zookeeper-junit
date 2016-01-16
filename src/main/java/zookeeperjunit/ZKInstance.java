@@ -16,6 +16,7 @@
 package zookeeperjunit;
 
 import javascalautils.Option;
+import javascalautils.Try;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
 
@@ -67,4 +68,10 @@ public interface ZKInstance {
 	 */
 	Option<Integer> port();
 	
+	/**
+	 * Attempts to create a connection towards the running ZooKeeper instance.
+	 * @return A Success with the connection or a Failure in case a connection could not be established
+	 * @since 1.1
+	 */
+	Try<CloseableZooKeeper> connect();
 }

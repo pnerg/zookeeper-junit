@@ -25,6 +25,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import javascalautils.Option;
+import javascalautils.Try;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
 import junitextensions.FutureAssert;
@@ -102,6 +103,21 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert, Futu
 		}
 	}
 
+	@Test
+	public void connect_success() throws TimeoutException, Throwable {
+		start();
+		Try<CloseableZooKeeper> connect = instance.connect();
+		connect.forEach(CloseableZooKeeper::close);
+		assertSuccess(connect);
+	}
+
+	@Test
+	public void connect_failure() throws TimeoutException, Throwable {
+		Try<CloseableZooKeeper> connect = instance.connect(); // no server is running, this should fail
+		connect.forEach(CloseableZooKeeper::close); //close just in case
+		assertFailure(connect);
+	}
+	
 	private <T> T value(Option<T> option) {
 		assertSome(option);
 		return option.get();

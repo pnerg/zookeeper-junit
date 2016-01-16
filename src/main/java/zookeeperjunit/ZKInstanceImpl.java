@@ -22,18 +22,23 @@ import static javascalautils.concurrent.FutureCompanion.Future;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.time.Duration;
 
 import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
 import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 
 import ioutil.FileUtil;
+import javascalautils.Failure;
 import javascalautils.Option;
+import javascalautils.Try;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
 
 /**
+ * Implements the ZKInstance.
  * @author Peter Nerg
+ * @since 1.0
  */
 final class ZKInstanceImpl implements ZKInstance {
 
@@ -122,4 +127,16 @@ final class ZKInstanceImpl implements ZKInstance {
 		return serverCnxnFactory.map(sf -> sf.getLocalPort());
 	}
 	
+	/* (non-Javadoc)
+	 * @see zookeeperjunit.ZKInstance#connect()
+	 */
+	@Override
+	public Try<CloseableZooKeeper> connect() {
+		//Tries to connect to the server in case it is running
+		//If not running then we return a Failure(IllegalStateException)
+		return connectString().map(connectString -> {
+			//attempt to connect
+			return Try(() -> CloseableZooKeeper.blockingConnect(connectString, Duration.ofSeconds(5)));
+		}).getOrElse(() -> new Failure<>(new IllegalStateException("The ZooKeeper server is not running")));
+	}
 }
