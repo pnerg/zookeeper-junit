@@ -144,7 +144,7 @@ public final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	}
 
 	/**
-	 * Just invokes {@link ZooKeeper#close()} to shutdown the ZK instance. <br>
+	 * Just invokes {@link ZooKeeper#close()} to close/disconnect the connection. <br>
 	 * Any errors during shutdown are ignored.
 	 * 
 	 * @since 1.1
