@@ -99,7 +99,7 @@ public class TestZKInstanceImpl extends BaseAssert implements OptionAssert, Futu
 		assertEquals(port, value(instance.port()));
 
 		try (CloseableZooKeeper zookeeper = blockingConnect(instance.connectString().get(),duration)) {
-			assertEquals(data, new String(ZKConnectionUtil.getData(zookeeper, path)));
+			assertEquals(data, new String(zookeeper.getData(path).get()));
 		}
 	}
 

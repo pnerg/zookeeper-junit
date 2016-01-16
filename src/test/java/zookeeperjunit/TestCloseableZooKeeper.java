@@ -65,4 +65,23 @@ public class TestCloseableZooKeeper extends BaseAssert implements TryAssert {
 		}
 	}
 	
+	@Test
+	public void getData_success() throws TimeoutException, Throwable {
+		try(CloseableZooKeeper zookeeper = CloseableZooKeeper.blockingConnect(connectString, duration)) {
+			String path = "/tmp/getData_success";
+			String data = "Peter was here!";
+			ZKConnectionUtil.createRecursive(zookeeper, path, data.getBytes());
+			assertTrue(exists(zookeeper, path));
+			
+			assertEquals(data, new String(zookeeper.getData(path).get()));
+		}		
+	}
+	
+	@Test
+	public void getData_failure() throws TimeoutException, Throwable {
+		try(CloseableZooKeeper zookeeper = CloseableZooKeeper.blockingConnect(connectString, duration)) {
+			assertFailure(zookeeper.getData("/no-such-path"));
+		}		
+	}
+	
 }

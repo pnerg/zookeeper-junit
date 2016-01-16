@@ -44,7 +44,6 @@ final class ZKInstanceImpl implements ZKInstance {
 
 	/** This is the root dir where all ZK data is stored for this ZK instance. */
 	private final File rootZooDir;
-
 	
 	/** The port ZK will listen to.*/
 	private int cfgPort;

@@ -83,7 +83,8 @@ public final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	}
 
 	/**
-	 * Recursively deletes the specified node and all of it's children. Will fail if the node/path does not exist or ZK is down.
+	 * Recursively deletes the specified node and all of it's children. <br>
+	 * Will fail if the node/path does not exist or ZK is down.
 	 * 
 	 * @param path
 	 *            The path
@@ -130,8 +131,22 @@ public final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	}
 
 	/**
+	 * Attempts to get the byte data from the specified path. <br>
+	 * Will fail if the node/path does not exist or ZK is down.
+	 * 
+	 * @param path
+	 *            The path
+	 * @return The result of the operation
+	 * @since 1.1
+	 */
+	public Try<byte[]> getData(String path) {
+		return Try(() -> getData(path, null, null));
+	}
+
+	/**
 	 * Just invokes {@link ZooKeeper#close()} to shutdown the ZK instance. <br>
 	 * Any errors during shutdown are ignored.
+	 * 
 	 * @since 1.1
 	 */
 	@Override

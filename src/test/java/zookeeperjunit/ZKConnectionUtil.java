@@ -71,10 +71,6 @@ abstract class ZKConnectionUtil {
 		}
 	}
 
-    static byte[] getData(ZooKeeper zooKeeper, String path) throws KeeperException, InterruptedException {
-        return zooKeeper.getData(path, null, null);
-    }
-
 	static boolean exists(ZooKeeper zooKeeper, String path) throws KeeperException, InterruptedException {
 		return zooKeeper.exists(path, null) != null;
 	}
