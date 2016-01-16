@@ -58,6 +58,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.dmonix.util</groupId>
+			<artifactId>io-util</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>		
+		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>3.4.7</version>

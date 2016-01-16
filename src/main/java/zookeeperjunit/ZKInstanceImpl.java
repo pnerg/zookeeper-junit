@@ -27,6 +27,7 @@ import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
 import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 
+import ioutil.FileUtil;
 import javascalautils.Option;
 import javascalautils.Unit;
 import javascalautils.concurrent.Future;
