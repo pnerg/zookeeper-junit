@@ -51,8 +51,11 @@ final class ZKInstanceImpl implements ZKInstance {
 	private Option<FileTxnSnapLog> fileTxnSnapLog = None();
 	private Option<ServerCnxnFactory> serverCnxnFactory = None();
 
-	ZKInstanceImpl(int cfgPort, File rootDir) {
+	private final int maxClientConnections;
+
+	ZKInstanceImpl(int cfgPort, File rootDir, int maxClientConnections) {
 		this.cfgPort = cfgPort;
+		this.maxClientConnections = maxClientConnections;
 		// create a unique path time for identification
 		rootZooDir = new File(rootDir, "zk-" + System.currentTimeMillis() + File.separator);
 	}
@@ -72,7 +75,7 @@ final class ZKInstanceImpl implements ZKInstance {
 			zkServer.setMinSessionTimeout(10000);
 			zkServer.setMaxSessionTimeout(10000);
 			ServerCnxnFactory cnxnFactory = ServerCnxnFactory.createFactory();
-			cnxnFactory.configure(new InetSocketAddress(cfgPort), 50);
+			cnxnFactory.configure(new InetSocketAddress(cfgPort), maxClientConnections);
 			cnxnFactory.startup(zkServer);
 			fileTxnSnapLog = Some(log);
 			serverCnxnFactory = Some(cnxnFactory);

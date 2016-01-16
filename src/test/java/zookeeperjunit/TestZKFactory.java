@@ -46,4 +46,9 @@ public class TestZKFactory extends BaseAssert {
 	public void withRootDir() {
 		assertNotNull(factory.withRootDir(new File("target")).create());
 	}
+
+	@Test
+	public void withMaxClientConnections() {
+		assertNotNull(factory.withMaxClientConnections(69).create());
+	}
 }

@@ -16,6 +16,7 @@
 package zookeeperjunit;
 
 import java.io.File;
+import static zookeeperjunit.Util.assertPositive;
 
 /**
  * Factory for creating ZooKeeper instances.
@@ -26,7 +27,7 @@ import java.io.File;
 public class ZKFactory {
 	private int port = 0;
 	private File rootDir = new File("target");
-	
+	private int maxClientConnections = 50;
 	/**
 	 * Inhibitive constructor.
 	 */
@@ -52,6 +53,7 @@ public class ZKFactory {
 	 * @since 1.0
 	 */
 	public ZKFactory withPort(int port) {
+		assertPositive(port);
 		this.port = port;
 		return this;
 	}
@@ -74,11 +76,23 @@ public class ZKFactory {
 	}
 	
 	/**
+	 * Sets the maximum amount of connections that can be made towards the ZooKeeper instance. <br>
+	 * If not provided the default value of <tt>50</tt> is used.
+	 * @param connections The max number of connections.
+	 * @return The factory instance
+	 * @since 1.1
+	 */
+	public ZKFactory withMaxClientConnections(int connections) {
+		assertPositive(connections);
+		return this;
+	}
+	
+	/**
 	 * Creates the ZooKeeper instance.
 	 * @return The placeholder for the ZooKeeper instance.
 	 * @since 1.0
 	 */
 	public ZKInstance create() {
-		return new ZKInstanceImpl(port, rootDir);
+		return new ZKInstanceImpl(port, rootDir, maxClientConnections);
 	}
 }

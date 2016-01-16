@@ -39,7 +39,7 @@ import junitextensions.OptionAssert;
 public class TestZKInstanceImpl extends BaseAssert implements OptionAssert, FutureAssert {
 	private static final long Timeout = 5000;
 	private static final Duration duration = Duration.ofMillis(Timeout);
-	private final ZKInstanceImpl instance = new ZKInstanceImpl(0, new File("target/"));
+	private final ZKInstanceImpl instance = new ZKInstanceImpl(0, new File("target/"), 5);
 
 	@After
 	public void after() throws TimeoutException, Throwable {
