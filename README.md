@@ -10,12 +10,16 @@ That is with a minimal amount of code you can control the life-cycle of a ZooKee
 The project provides features such as:
 * Effortless/automatic port allocation  
   Guarantees that there will never be port collisions on the port the server listens to.
-* Efortless/automatic data file management
+* Efortless/automatic data file management  
   Guarantees unique data file paths to avoid collision.  
   Also provides means to delete the data files once the test is finished
 * Full life-cycle management of the server  
   Includes start/stop and re-start of a server.  
   Allows for test cases where a server goes offline or re-starts.
+* Utility operations to ease management of data  
+  Provides means to assert existence of data, delete single or recursive paths
+* Specialized interfaces allowing for mix-in compositions with more rich assert operations  
+  
 
 ## The full manual
 Refer to the [Wiki](https://github.com/pnerg/zookeeper-junit/wiki) for a full description on this project and how to use its features.
