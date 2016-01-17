@@ -19,6 +19,7 @@ import javascalautils.Try;
 import junitextensions.TryAssert;
 
 /**
+ * Provides additional assert operations related to ZooKeeper data.
  * @author Peter Nerg
  * @since 1.1
  */
