@@ -2,7 +2,7 @@
 # ZooKeeper JUnit
 Utility for managing a ZooKeeper server during JUnit testing.  
 There are other implementations out there. Some are baked into larger frameworks (such as Curator), others are standalone.  
-I've at least found that all I've looked at have been cumbersome to work with or required an abundance oof dependencies which I find undesirable.
+I've at least found that all I've looked at have been cumbersome to work with or required an abundance of dependencies which I find undesirable.
 
 ## What's this?
 This project implements a simple to use and in-process ZooKeeper starter.   
