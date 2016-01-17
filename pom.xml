@@ -6,7 +6,7 @@
 	<groupId>org.dmonix.junit</groupId>
 	<artifactId>zookeeper-junit</artifactId>
 	<name>ZooKeeper JUnit</name>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<packaging>jar</packaging>
 	<description>Utility for managing a ZooKeeper server during JUnit testing</description>
 	<url>https://github.com/pnerg/zookeeper-junit</url>
