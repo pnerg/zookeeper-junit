@@ -8,9 +8,14 @@ I've at least found that all I've looked at have been cumbersome to work with or
 This project implements a simple to use and in-process ZooKeeper starter.   
 That is with a minimal amount of code you can control the life-cycle of a ZooKeeper server to use for your unit testing of applications needing a ZooKeper server.  
 The project provides features such as:
-* Effortless/automatic port allocation
+* Effortless/automatic port allocation  
   Guarantees that there will never be port collisions on the port the server listens to.
-
+* Efortless/automatic data file management
+  Guarantees unique data file paths to avoid collision.  
+  Also provides means to delete the data files once the test is finished
+* Full life-cycle management of the server  
+  Includes start/stop and re-start of a server.  
+  Allows for test cases where a server goes offline or re-starts.
 
 ## The full manual
 Refer to the [Wiki](https://github.com/pnerg/zookeeper-junit/wiki) for a full description on this project and how to use its features.
