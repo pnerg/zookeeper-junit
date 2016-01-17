@@ -15,14 +15,22 @@
  */
 package zookeeperjunit;
 
-import org.junit.Test;
 import static zookeeperjunit.Util.assertPositive;
+
+import org.junit.Test;
+
+import junitextensions.ReflectionAssert;
 /**
  * Test the class {@link Util}.
  * @author Peter Nerg
  */
-public class TestUtil extends BaseAssert {
+public class TestUtil extends BaseAssert implements ReflectionAssert {
 
+	@Test
+	public void assertPrivateConstructor() {
+		assertPrivateConstructor(Util.class);
+	}
+	
 	@Test
 	public void assertPositive_success() {
 		assertPositive(666);

@@ -17,18 +17,26 @@ package zookeeperjunit;
 
 /**
  * Utility with helper methods.
+ * 
  * @author Peter Nerg
  * @since 1.1
  */
 final class Util {
-	
+	/**
+	 * Inhibitive constructor.
+	 */
+	private Util() {
+	}
+
 	/**
 	 * Asserts that the provided integer is >= 0. <br>
 	 * Throws a IllegalArgumentException if the assert fails.
-	 * @param i The integer to assert
+	 * 
+	 * @param i
+	 *            The integer to assert
 	 */
 	static void assertPositive(int i) {
-		if(i < 0) {
+		if (i < 0) {
 			throw new IllegalArgumentException("Only positive numbers are allowed");
 		}
 	}
