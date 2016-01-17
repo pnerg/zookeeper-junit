@@ -18,7 +18,6 @@ package zookeeperjunit;
 import static zookeeperjunit.CloseableZooKeeper.blockingConnect;
 
 import java.io.File;
-import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
@@ -37,8 +36,6 @@ import junitextensions.OptionAssert;
  * @author Peter Nerg
  */
 public class TestZKInstanceImpl extends BaseAssert implements OptionAssert, FutureAssert {
-	private static final long Timeout = 5000;
-	private static final Duration duration = Duration.ofMillis(Timeout);
 	private final ZKInstanceImpl instance = new ZKInstanceImpl(0, new File("target/"), 5);
 
 	@After

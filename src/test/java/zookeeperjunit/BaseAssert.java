@@ -15,6 +15,7 @@
  */
 package zookeeperjunit;
 
+import java.time.Duration;
 import java.util.Locale;
 
 import org.junit.Assert;
@@ -25,6 +26,8 @@ import org.junit.Assert;
  * @author Peter Nerg
  */
 public class BaseAssert extends Assert {
+	static final long Timeout = 5000;
+	static final Duration duration = Duration.ofMillis(Timeout);
 
     static {
         // Configure language for proper logging outputs
