@@ -51,14 +51,14 @@ public class TestPropertyDatabase implements ZooKeeperAssert, OptionAssert {
 
 	/**
 	 * Starts a ZooKeeper server for each test case.
-	 * @throws TimeoutException
-	 * @throws InterruptedException
+	 * @throws TimeoutException 
+	 * @throws Throwable 
 	 */
 	@Before
-	public void start() throws TimeoutException, InterruptedException {
+	public void start() throws TimeoutException, Throwable {
 		// starting server is an asynchronous non-blocking operation
 		// for the purpose of this example we stop and block here
-		zkInstance.start().ready(duration);
+		zkInstance.start().result(duration);
 		
 		//forcing a get on the Option as we should be connected at this stage
 		database = new PropertyDatabase(zkInstance.connectString().get());
