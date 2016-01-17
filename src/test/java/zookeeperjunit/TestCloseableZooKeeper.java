@@ -15,16 +15,20 @@
  */
 package zookeeperjunit;
 
+import static zookeeperjunit.ZKConnectionUtil.createRecursive;
+import static zookeeperjunit.ZKConnectionUtil.exists;
+
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicLong;
 
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import junitextensions.TryAssert;
-import static zookeeperjunit.ZKConnectionUtil.createRecursive;
-import static zookeeperjunit.ZKConnectionUtil.exists;
 
 /**
  * Test the class {@link CloseableZooKeeper}
@@ -37,6 +41,9 @@ public class TestCloseableZooKeeper extends BaseAssert implements TryAssert {
 	
 	private static String connectString;
 	
+	private final AtomicLong counter = new AtomicLong(1);
+	private final String rootPath = "/TestCloseableZooKeeper-"+counter.getAndIncrement();
+	
 	@BeforeClass
 	public static void startZooKeeper() throws TimeoutException, Throwable {
 		instance.start().result(duration);
@@ -48,9 +55,23 @@ public class TestCloseableZooKeeper extends BaseAssert implements TryAssert {
 		instance.destroy().result(duration);
 	}
 	
+	@Before
+	public void before() throws TimeoutException, Throwable {
+		try(CloseableZooKeeper zookeeper = connection()) {
+			createRecursive(zookeeper, rootPath);
+		}		
+	}
+	
+	@After
+	public void after() throws TimeoutException, Throwable {
+		try(CloseableZooKeeper zookeeper = connection()) {
+			zookeeper.deleteRecursively(rootPath);
+		}		
+	}
+	
 	@Test
 	public void deleteRecursively_existingPath() throws TimeoutException, Throwable {
-		try(CloseableZooKeeper zookeeper = CloseableZooKeeper.blockingConnect(connectString, duration)) {
+		try(CloseableZooKeeper zookeeper = connection()) {
 			//create the path to delete
 			String path = "/tmp/delete_existingPath";
 			createRecursive(zookeeper,path);
@@ -67,7 +88,7 @@ public class TestCloseableZooKeeper extends BaseAssert implements TryAssert {
 	
 	@Test
 	public void getData_success() throws TimeoutException, Throwable {
-		try(CloseableZooKeeper zookeeper = CloseableZooKeeper.blockingConnect(connectString, duration)) {
+		try(CloseableZooKeeper zookeeper = connection()) {
 			String path = "/tmp/getData_success";
 			String data = "Peter was here!";
 			ZKConnectionUtil.createRecursive(zookeeper, path, data.getBytes());
@@ -76,12 +97,29 @@ public class TestCloseableZooKeeper extends BaseAssert implements TryAssert {
 			assertEquals(data, new String(zookeeper.getData(path).get()));
 		}		
 	}
+
+	@Test
+	public void exists_existingPath() throws TimeoutException, Throwable {
+		try(CloseableZooKeeper zookeeper = connection()) {
+			assertSuccess(true, zookeeper.exists(rootPath));
+		}		
+	}
+
+	@Test
+	public void exists_nonExistingPath() throws TimeoutException, Throwable {
+		try(CloseableZooKeeper zookeeper = connection()) {
+			assertSuccess(false, zookeeper.exists("/no-such-path"));
+		}		
+	}
 	
 	@Test
 	public void getData_failure() throws TimeoutException, Throwable {
-		try(CloseableZooKeeper zookeeper = CloseableZooKeeper.blockingConnect(connectString, duration)) {
+		try(CloseableZooKeeper zookeeper = connection()) {
 			assertFailure(zookeeper.getData("/no-such-path"));
 		}		
 	}
 	
+	private CloseableZooKeeper connection() throws TimeoutException, Throwable {
+		return CloseableZooKeeper.blockingConnect(connectString, duration);
+	}
 }

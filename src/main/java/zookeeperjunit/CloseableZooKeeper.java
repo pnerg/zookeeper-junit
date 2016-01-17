@@ -144,6 +144,19 @@ public final class CloseableZooKeeper extends ZooKeeper implements Closeable {
 	}
 
 	/**
+	 * Attempts to verify if the specified path exists. <br>
+	 * Will fail if ZK is down.
+	 * 
+	 * @param path
+	 *            The path
+	 * @return The result of the operation
+	 * @since 1.1
+	 */
+	public Try<Boolean> exists(String path) {
+		return Try(() -> exists(path, null) != null);
+	}
+
+	/**
 	 * Just invokes {@link ZooKeeper#close()} to close/disconnect the connection. <br>
 	 * Any errors during shutdown are ignored.
 	 * 
