@@ -29,9 +29,14 @@ public class TestZooKeeperAssert extends BaseAssert implements ZooKeeperAssert {
 
 	private static ZKInstance zkInstance = ZKFactory.apply().create();
 
+	private static final String rootPath = "/TestZooKeeperAssert-"+System.currentTimeMillis();
+	
 	@BeforeClass
 	public static void startZK() throws TimeoutException, Throwable {
 		zkInstance.start().result(duration);
+		try(CloseableZooKeeper zookeeper = zkInstance.connect().get()) {
+			ZKConnectionUtil.createRecursive(zookeeper, rootPath);
+		}
 	}
 	
 	@AfterClass
@@ -47,13 +52,23 @@ public class TestZooKeeperAssert extends BaseAssert implements ZooKeeperAssert {
 		return zkInstance;
 	}
 	
+	@Test
+	public void assertExists_exists() {
+		assertExists(rootPath);
+	}
+
 	@Test(expected = AssertionError.class)
-	public void assertExists() {
+	public void assertExists_existsNot() {
 		assertExists("/no-such-path");
 	}
 
+	@Test(expected = AssertionError.class)
+	public void assertNotExists_exists() {
+		assertNotExists(rootPath);
+	}
+	
 	@Test
-	public void assertNotExists() {
+	public void assertNotExists_existsNot() {
 		assertNotExists("/no-such-path");
 	}
 	
