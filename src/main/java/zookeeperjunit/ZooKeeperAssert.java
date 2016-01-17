@@ -32,9 +32,23 @@ public interface ZooKeeperAssert extends TryAssert {
 	 *            The path to assert
 	 * @since 1.1
 	 */
-	default void exists(String path) {
+	default void assertExists(String path) {
 		try (CloseableZooKeeper zookeeper = connection()) {
 			assertSuccess(true, zookeeper.exists(path));
+		}
+	}
+
+	/**
+	 * Assert that the provided path not exists in ZooKeeper. <br>
+	 * This method will automatically create/close a {@link #connection()} to get access to the ZooKeeper data. 
+	 * 
+	 * @param path
+	 *            The path to assert
+	 * @since 1.1
+	 */
+	default void assertNotExists(String path) {
+		try (CloseableZooKeeper zookeeper = connection()) {
+			assertSuccess(false, zookeeper.exists(path));
 		}
 	}
 

@@ -48,8 +48,13 @@ public class TestZooKeeperAssert extends BaseAssert implements ZooKeeperAssert {
 	}
 	
 	@Test(expected = AssertionError.class)
-	public void exists() {
-		exists("/no-such-path");
+	public void assertExists() {
+		assertExists("/no-such-path");
 	}
 
+	@Test
+	public void assertNotExists() {
+		assertNotExists("/no-such-path");
+	}
+	
 }
