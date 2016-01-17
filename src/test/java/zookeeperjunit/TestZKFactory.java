@@ -51,4 +51,14 @@ public class TestZKFactory extends BaseAssert {
 	public void withMaxClientConnections() {
 		assertNotNull(factory.withMaxClientConnections(69).create());
 	}
+	
+	@Test
+	public void withMultipleSettings()  {
+		ZKInstance instance = ZKFactory.apply()
+		.withMaxClientConnections(20)
+		.withPort(6969)
+		.withRootDir(new File("target"))
+		.create();
+		assertNotNull(instance);
+	}
 }
