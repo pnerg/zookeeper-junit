@@ -16,7 +16,7 @@
 	</issueManagement>
 
 	<properties>
-		<javascalautils.version>1.9</javascalautils.version>
+		<javascalautils.version>1.10</javascalautils.version>
 		<junitextensions.version>1.1</junitextensions.version>
 	</properties>
 	
