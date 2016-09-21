@@ -16,7 +16,7 @@
 	</issueManagement>
 
 	<properties>
-		<javascalautils.version>1.10</javascalautils.version>
+		<javascalautils.version>1.11</javascalautils.version>
 		<junitextensions.version>1.1</junitextensions.version>
 	</properties>
 	
@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>org.dmonix.util</groupId>
 			<artifactId>io-util</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 			<scope>compile</scope>
 		</dependency>		
 		<dependency>
