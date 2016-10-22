@@ -48,8 +48,8 @@ final class ZKInstanceImpl implements ZKInstance {
 	/** The port ZK will listen to.*/
 	private int cfgPort;
 
-	private Option<FileTxnSnapLog> fileTxnSnapLog = None();
-	private Option<ServerCnxnFactory> serverCnxnFactory = None();
+    /** Holds the information to the started ZK instance.*/
+	private Option<ZKInstanceHolder> zkInstanceHolder = None();
 
 	private final int maxClientConnections;
 
@@ -77,8 +77,7 @@ final class ZKInstanceImpl implements ZKInstance {
 			ServerCnxnFactory cnxnFactory = ServerCnxnFactory.createFactory();
 			cnxnFactory.configure(new InetSocketAddress(cfgPort), maxClientConnections);
 			cnxnFactory.startup(zkServer);
-			fileTxnSnapLog = Some(log);
-			serverCnxnFactory = Some(cnxnFactory);
+            zkInstanceHolder = Some(new ZKInstanceHolder(log, cnxnFactory));
 			//remember the port. if 0 was provided then ZK will pick a free port
 			//it must be remembered for the scenario of restarting this instance
 			//in such case we want to get the same port again
@@ -94,10 +93,13 @@ final class ZKInstanceImpl implements ZKInstance {
 	@Override
 	public Future<Unit> stop() {
 		return Future(() -> {
-			serverCnxnFactory.forEach(s -> s.shutdown());
-			fileTxnSnapLog.forEach(f -> Try(() -> f.close()));
-			fileTxnSnapLog = None();
-			serverCnxnFactory = None();
+            zkInstanceHolder.forEach(zk -> {
+                Try(() -> {
+                    zk.serverCnxnFactory.shutdown();
+                    zk.fileTxnSnapLog.close();
+                });
+            });
+            zkInstanceHolder = None();
 		});
 	}
 	
@@ -126,7 +128,7 @@ final class ZKInstanceImpl implements ZKInstance {
 	 */
 	@Override
 	public Option<Integer> port() {
-		return serverCnxnFactory.map(sf -> sf.getLocalPort());
+		return zkInstanceHolder.map(h -> h.serverCnxnFactory.getLocalPort());
 	}
 	
 	/* (non-Javadoc)
@@ -141,4 +143,17 @@ final class ZKInstanceImpl implements ZKInstance {
 			return Try(() -> CloseableZooKeeper.blockingConnect(connectString, Duration.ofSeconds(5)));
 		}).getOrElse(() -> new Failure<>(new IllegalStateException("The ZooKeeper server is not running")));
 	}
+
+    /**
+     * Holder of ZooKeeper instance information.
+     */
+	private final class ZKInstanceHolder {
+        private final FileTxnSnapLog fileTxnSnapLog;
+        private final ServerCnxnFactory serverCnxnFactory;
+
+        private ZKInstanceHolder(FileTxnSnapLog fileTxnSnapLog, ServerCnxnFactory serverCnxnFactory) {
+            this.fileTxnSnapLog = fileTxnSnapLog;
+            this.serverCnxnFactory = serverCnxnFactory;
+        }
+    }
 }
